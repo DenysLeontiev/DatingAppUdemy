@@ -9,8 +9,13 @@ builder.Services.AddControllers();
 //Adding a connection string
 string connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
 builder.Services.AddDbContext<DataContext>(options => options.UseSqlite(connectionString));
+builder.Services.AddCors();
 
 var app = builder.Build();
+
+app.UseCors(options => {
+    options.AllowAnyHeader().AllowAnyMethod().WithOrigins("https://localhost:4200");
+});
 
 app.MapControllers();
 
