@@ -1,19 +1,29 @@
 using API.Data;
+using API.Interfaces;
+using API.Services;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
+using API.Extension;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 
 builder.Services.AddControllers();
-//Adding a connection string
-string connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
-builder.Services.AddDbContext<DataContext>(options => options.UseSqlite(connectionString));
-builder.Services.AddCors();
+
+// My own extesion methods to add services
+builder.Services.AddApplicationServices(builder.Configuration);
+builder.Services.AddIdentityServices(builder.Configuration);
 
 var app = builder.Build();
 
-app.UseCors(options => {
+app.UseAuthentication();
+app.UseAuthorization();
+
+app.UseCors(options =>
+{
     options.AllowAnyHeader().AllowAnyMethod().WithOrigins("https://localhost:4200");
 });
 
