@@ -24,10 +24,11 @@ namespace API.Controllers
             _mapper = mapper;
         }
 
-        [AllowAnonymous]
+        // [AllowAnonymous]
         [HttpGet]
         public async Task<ActionResult<IEnumerable<MemberDto>>> GetUsers()
         {
+            var usersTest123 = await _userRepository.GetUsersAsync();
             var users = await _userRepository.GetMembersAsync();
             return Ok(users);
         }
