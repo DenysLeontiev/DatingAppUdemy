@@ -54,7 +54,7 @@ import { TextInputComponent } from './_forms/text-input/text-input.component';
     FormsModule,
     SharedModule,
     ReactiveFormsModule,
-    TabsModule.forRoot()
+    TabsModule.forRoot(),
   ],
   providers: [
     {provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptor, multi: true},
