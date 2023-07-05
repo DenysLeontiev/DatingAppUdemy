@@ -6,6 +6,7 @@ using API.Data;
 using API.Helpers;
 using API.Interfaces;
 using API.Services;
+using API.SignalR;
 using Microsoft.EntityFrameworkCore;
 
 namespace API.Extension
@@ -26,6 +27,9 @@ namespace API.Extension
             services.AddScoped<LogUserActivity>();
             services.AddScoped<ILikeRepository, LikeRepository>();
             services.AddScoped<IMessageRepository, MessageRepository>();
+            services.AddSignalR(); // here we add SignalR Middleware
+
+            services.AddSingleton<PresenceTracker>(); // Singleton because we want that Dictionary be always present for every user all the time
 
             return services;
         }

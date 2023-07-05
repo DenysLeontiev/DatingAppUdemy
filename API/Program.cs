@@ -8,6 +8,9 @@ using System.Text;
 using API.Extension;
 using API.Middleware;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.AspNetCore.Identity;
+using API.Entities;
+using API.SignalR;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -28,24 +31,36 @@ app.UseAuthorization();
 
 app.UseCors(options =>
 {
-    options.AllowAnyHeader().AllowAnyMethod().WithOrigins("https://localhost:4200");
+    options.AllowAnyHeader()
+    .AllowAnyMethod()
+    .AllowCredentials()
+    .WithOrigins("https://localhost:4200");
 });
 
+// app.UseCors(builder =>
+// {
+//     builder.AllowAnyHeader().AllowAnyMethod().AllowCredentials().WithOrigins("http://localhost:4200");
+// });
+
 app.MapControllers();
+app.MapHub<PresenceHub>("/hubs/presence");
+
+//app.MapHub<PresenceHub>("hubs/presence"); // endpoint on "online/offline" users
 
 using var scope = app.Services.CreateScope();
 var services = scope.ServiceProvider;
 try
 {
+    var userManager = services.GetRequiredService<UserManager<AppUser>>();
+    var roleManager = services.GetRequiredService<RoleManager<AppRole>>();
     var dataContext = services.GetRequiredService<DataContext>();
-    await dataContext.Database.MigrateAsync();
-    await Seed.SeedData(dataContext);
+    await dataContext.Database.MigrateAsync(); // apply any pending migrations
+    await Seed.SeedData(userManager, roleManager);
 }
 catch (Exception ex)
 {
     var logger = services.GetRequiredService<ILogger<Program>>();
     logger.LogError(ex, "An error happend during seeding data");
-    throw;
 }
 
 app.Run();
