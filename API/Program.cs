@@ -44,6 +44,7 @@ app.UseCors(options =>
 
 app.MapControllers();
 app.MapHub<PresenceHub>("/hubs/presence");
+app.MapHub<MessageHub>("/hubs/message");
 
 //app.MapHub<PresenceHub>("hubs/presence"); // endpoint on "online/offline" users
 

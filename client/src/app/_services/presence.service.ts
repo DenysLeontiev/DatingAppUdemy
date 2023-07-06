@@ -14,7 +14,7 @@ export class PresenceService {
   private hubConnection?: HubConnection;
 
   // we want to subsribe to that observable so we will be notified every time something new happens
-  private onlineUsersSource = new BehaviorSubject<string[]>([]); 
+  private onlineUsersSource = new BehaviorSubject<string[]>([]);  // init as an empty array
   onlineUsers$ = this.onlineUsersSource.asObservable();
 
   constructor(private toastr: ToastrService) { }

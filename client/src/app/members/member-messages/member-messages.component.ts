@@ -12,10 +12,10 @@ import { MessageService } from 'src/app/_services/message.service';
 export class MemberMessagesComponent implements OnInit {
   @ViewChild('messageForm') messageForm?: NgForm;
   @Input() username: string | null = null;
-  @Input() messages:Message[] = [];
+  // @Input() messages:Message[] = [];
   messageContent = '';
 
-  constructor(private messageService: MessageService) {}
+  constructor(public messageService: MessageService) {}
 
   ngOnInit(): void {
     // this.loadMessages();
@@ -23,10 +23,14 @@ export class MemberMessagesComponent implements OnInit {
 
   sendMessage() {
     if(this.username) {
-      this.messageService.sendMessage(this.username, this.messageContent).subscribe((response) => {
-        this.messages.push(response);
+      // this.messageService.sendMessage(this.username, this.messageContent).subscribe((response) => {
+      //   this.messages.push(response);
+      //   this.messageForm?.reset();
+      // })
+      this.messageService.sendMessage(this.username, this.messageContent).then(() => {
         this.messageForm?.reset();
-      })
+        console.log("message is sent");
+      });
     }
   }
 }
